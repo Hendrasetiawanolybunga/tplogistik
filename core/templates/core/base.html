@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      {% block title %}
+        CV. Trio Prima Logistik
+      {% endblock %}
+    </title>
+
+    <!-- Bootstrap + FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+      }
+      
+      .wrapper {
+        display: flex;
+        min-height: 100vh;
+      }
+      
+      .sidebar {
+        width: 250px;
+        background-color: #1f2d3d;
+        color: white;
+        padding-top: 20px;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+      }
+      
+      .sidebar.collapsed {
+        width: 0;
+        overflow: hidden;
+      }
+      
+      .sidebar .brand {
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0 20px 10px 20px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #2e3c4e;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .sidebar .nav-link {
+        color: #ffffff;
+        padding: 10px 20px;
+        display: block;
+        transition: background-color 0.2s;
+      }
+      
+      .sidebar .nav-link:hover,
+      .dropdown-item:hover {
+        background-color: #3a4b5c;
+        text-decoration: none;
+      }
+      
+      .sidebar .nav-heading {
+        padding: 10px 20px 5px 20px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #adb5bd;
+      }
+      
+      .main-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        transition: margin-left 0.3s;
+      }
+      
+      .content-wrapper {
+        flex: 1;
+        padding: 20px;
+      }
+      
+      .breadcrumb-bar {
+        background-color: #e9ecef;
+        padding: 10px 20px;
+        margin-bottom: 20px;
+      }
+      
+      footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+      }
+      
+      .dropdown-toggle::after {
+        float: right;
+        margin-top: 7px;
+      }
+      
+      .toggle-sidebar {
+        background: none;
+        border: none;
+        color: #343a40;
+        font-size: 1.5rem;
+        margin-right: 10px;
+      }
+      .dropdown-menu-light {
+        background-color: #f4f4f4 !important;
+        color: #212529;
+      }
+      .dropdown-menu-light .dropdown-item {
+        color: #212529;
+      }
+      .dropdown-menu-light .dropdown-item:hover {
+        background-color: #e2e6ea;
+      }
+    </style>
+
+    {% block extra_css %}
+
+    {% endblock %}
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <div class="brand">CV. TRIO PRIMA LOGISTIK</div>
+        <a class="nav-link {% if current_menu == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+
+      <hr>
+        <div class="dropdown {% if current_menu == 'barang' or current_menu == 'vendor' or current_menu == 'kategori' or current_menu == 'kecamatan' or current_menu == 'kelurahan' %}show{% endif %}">
+          <a class="nav-link dropdown-toggle {% if current_menu == 'barang' or current_menu == 'vendor' or current_menu == 'kategori' or current_menu == 'kecamatan' or current_menu == 'kelurahan' %}active{% endif %}" href="#" data-bs-toggle="dropdown"><i class="fas fa-database me-2"></i>  Master Data</a>
+          <!-- Master Data -->
+          <ul class="dropdown-menu dropdown-menu-light {% if current_menu == 'barang' or current_menu == 'vendor' or current_menu == 'kategori' or current_menu == 'kecamatan' or current_menu == 'kelurahan' %}show{% endif %}">
+            <li>
+              <a class="dropdown-item {% if current_menu == 'barang' %}active{% endif %}" href="{% url 'barang_index' %}"><i class="fas fa-box me-2"></i>Barang</a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if current_menu == 'vendor' %}active{% endif %}" href="{% url 'vendor_index' %}"><i class="fas fa-truck me-2"></i>Vendor</a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if current_menu == 'kategori' %}active{% endif %}" href="{% url 'kategori_index' %}"><i class="fas fa-tags me-2"></i>Kategori</a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if current_menu == 'kecamatan' %}active{% endif %}" href="{% url 'kecamatan_index' %}"><i class="fas fa-map-marker-alt me-2"></i>Kecamatan</a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if current_menu == 'kelurahan' %}active{% endif %}" href="{% url 'kelurahan_index' %}"><i class="fas fa-location-arrow me-2"></i>Kelurahan</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown {% if current_menu == 'pembeli' %}show{% endif %}">
+          <a class="nav-link dropdown-toggle {% if current_menu == 'pembeli' %}active{% endif %}" href="#" data-bs-toggle="dropdown"><i class="fas fa-users me-1"></i> Pelanggan</a>
+          <!-- Pelanggan -->
+          <ul class="dropdown-menu dropdown-menu-light {% if current_menu == 'pembeli' %}show{% endif %}">
+            <li>
+              <a class="dropdown-item {% if current_menu == 'pembeli' %}active{% endif %}" href="{% url 'pembeli_index' %}"><i class="fas fa-user-friends me-2"></i>Pembeli</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown {% if current_menu == 'faktur' or current_menu == 'detail_faktur' or current_menu == 'pengiriman' %}show{% endif %}">
+          <a class="nav-link dropdown-toggle {% if current_menu == 'faktur' or current_menu == 'detail_faktur' or current_menu == 'pengiriman' %}active{% endif %}" href="#" data-bs-toggle="dropdown"><i class="fas fa-file-invoice-dollar me-2"></i> Transaksi</a>
+          <!-- Transaksi -->
+          <ul class="dropdown-menu dropdown-menu-light {% if current_menu == 'faktur' or current_menu == 'detail_faktur' or current_menu == 'pengiriman' %}show{% endif %}">
+            <li>
+              <a class="dropdown-item {% if current_menu == 'faktur' %}active{% endif %}" href="#"><i class="fas fa-file-invoice me-2"></i>Data Faktur</a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if current_menu == 'detail_faktur' %}active{% endif %}" href="#"><i class="fas fa-file-alt me-2"></i>Detail Faktur</a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if current_menu == 'pengiriman' %}active{% endif %}" href="#"><i class="fas fa-shipping-fast me-2"></i>Kelola Pengiriman</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dropdown {% if current_menu == 'laporan' %}show{% endif %}">
+          <a class="nav-link dropdown-toggle {% if current_menu == 'laporan' %}active{% endif %}" href="#" data-bs-toggle="dropdown"><i class="fas fa-chart-bar me-2"></i> Laporan</a>
+          <!-- Laporan -->
+          <ul class="dropdown-menu dropdown-menu-light {% if current_menu == 'laporan' %}show{% endif %}">
+            <li>
+              <a class="dropdown-item {% if current_menu == 'laporan' %}active{% endif %}" href="#"><i class="fas fa-chart-line me-2"></i>Data Laporan</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-heading">Akun</div>
+        <a class="nav-link" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="breadcrumb-bar">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <button class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+              <h5 class="mb-0 ms-2">
+                {% block page_title %}
+                  Dashboard
+                {% endblock %}
+              </h5>
+            </div>
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                  <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  {% block breadcrumb %}
+                    Dashboard
+                  {% endblock %}
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+
+        <div class="content-wrapper">
+          {% block content %}
+
+          {% endblock %}
+        </div>
+
+        <footer>
+          <p>&copy; 2025 Sistem Logistik - CV. TRIO PRIMA LOGISTIK</p>
+        </footer>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar')
+        sidebar.classList.toggle('collapsed')
+      }
+    </script>
+    {% block extra_js %}
+
+    {% endblock %}
+  </body>
+</html>

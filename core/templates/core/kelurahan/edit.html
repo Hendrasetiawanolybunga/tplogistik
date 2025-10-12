@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% block page_title %}Edit Kelurahan{% endblock %}
+{% block breadcrumb %}Edit Kelurahan{% endblock %}
+
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <i class="fa fa-edit"></i> Form Edit Kelurahan
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        {{ form.nama_kelurahan.label_tag }}
+        {{ form.nama_kelurahan }}
+        {% if form.nama_kelurahan.errors %}
+          <div class="text-danger small">{{ form.nama_kelurahan.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.kode_pos.label_tag }}
+        {{ form.kode_pos }}
+        {% if form.kode_pos.errors %}
+          <div class="text-danger small">{{ form.kode_pos.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.kecamatan.label_tag }}
+        {{ form.kecamatan }}
+        {% if form.kecamatan.errors %}
+          <div class="text-danger small">{{ form.kecamatan.errors }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+      <a href="{% url 'kelurahan_index' %}" class="btn btn-secondary">Kembali</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

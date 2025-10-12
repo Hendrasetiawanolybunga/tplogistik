@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% block page_title %}Tambah Pembeli{% endblock %}
+{% block breadcrumb %}Tambah Pembeli{% endblock %}
+
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-success text-white">
+    <i class="fa fa-plus"></i> Form Tambah Pembeli
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        {{ form.nama.label_tag }}
+        {{ form.nama }}
+        {% if form.nama.errors %}
+          <div class="text-danger small">{{ form.nama.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.alamat.label_tag }}
+        {{ form.alamat }}
+        {% if form.alamat.errors %}
+          <div class="text-danger small">{{ form.alamat.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.no_hp.label_tag }}
+        {{ form.no_hp }}
+        {% if form.no_hp.errors %}
+          <div class="text-danger small">{{ form.no_hp.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.kelurahan.label_tag }}
+        {{ form.kelurahan }}
+        {% if form.kelurahan.errors %}
+          <div class="text-danger small">{{ form.kelurahan.errors }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan</button>
+      <a href="{% url 'pembeli_index' %}" class="btn btn-secondary">Kembali</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

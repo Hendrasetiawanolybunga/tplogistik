@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% block page_title %}Edit Kategori{% endblock %}
+{% block breadcrumb %}Edit Kategori{% endblock %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <i class="fa fa-edit"></i> Form Edit Kategori
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.nama.label_tag }} {{ form.nama }}
+        {% if form.nama.errors %}
+          <div class="text-danger small">{{ form.nama.errors }}</div>
+        {% endif %}
+      </div>
+      <button class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+      <a href="{% url 'kategori_index' %}" class="btn btn-secondary">Kembali</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
