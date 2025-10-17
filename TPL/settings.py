@@ -64,26 +64,26 @@ WSGI_APPLICATION = 'TPL.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tplogistik',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',  
-        'PORT': '3306',  
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'tplogistik',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',  
+#         'PORT': '3306',  
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -149,59 +149,27 @@ JAZZMIN_SETTINGS = {
    "order_with_respect_to": ["auth", "core.Kecamatan", "core.Kelurahan", "core.Pembeli", "core.Vendor", "core.Kategori", "core.Barang", "core.Kurir", "core.Faktur"],
 }
 
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": False,
-    "brand_small_text": False,
-    "brand_colour": False,
-    "accent": "accent-navy",
-    "navbar": "navbar-white navbar-light",
-    "no_navbar_border": False,
-    "navbar_fixed": False,
-    "layout_boxed": False,
-    "footer_fixed": False,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-light-navy",
-    "sidebar_nav_small_text": True,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
-    "theme": "sketchy",
-    "dark_mode_theme": None,
-    "button_classes": {
-        "primary": "btn-outline-primary",
-        "secondary": "btn-outline-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
-}
-
 # JAZZMIN_UI_TWEAKS = {
 #     "navbar_small_text": False,
 #     "footer_small_text": False,
 #     "body_small_text": False,
 #     "brand_small_text": False,
-#     "brand_colour": "navbar-light",
-#     "accent": "accent-indigo",
+#     "brand_colour": False,
+#     "accent": "accent-navy",
 #     "navbar": "navbar-white navbar-light",
 #     "no_navbar_border": False,
-#     "navbar_fixed": True,
+#     "navbar_fixed": False,
 #     "layout_boxed": False,
 #     "footer_fixed": False,
 #     "sidebar_fixed": True,
-#     "sidebar": "sidebar-light-purple",
+#     "sidebar": "sidebar-light-navy",
 #     "sidebar_nav_small_text": True,
 #     "sidebar_disable_expand": False,
 #     "sidebar_nav_child_indent": False,
 #     "sidebar_nav_compact_style": False,
 #     "sidebar_nav_legacy_style": False,
 #     "sidebar_nav_flat_style": False,
-#     "theme": "lumen",
+#     "theme": "sketchy",
 #     "dark_mode_theme": None,
 #     "button_classes": {
 #         "primary": "btn-outline-primary",
@@ -212,3 +180,35 @@ JAZZMIN_UI_TWEAKS = {
 #         "success": "btn-success"
 #     }
 # }
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-light",
+    "accent": "accent-indigo",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-light-purple",
+    "sidebar_nav_small_text": True,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "lumen",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
