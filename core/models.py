@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from decimal import Decimal
 
 
 class Kecamatan(models.Model):
@@ -83,37 +85,33 @@ class Barang(models.Model):
         verbose_name_plural = "Barang"
 
 
-class Kurir(models.Model):
-    id_kurir = models.AutoField(primary_key=True)
-    nama_kurir = models.CharField(max_length=100)
-    no_hp = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.nama_kurir
-
-    class Meta:
-        verbose_name = "Kurir"
-        verbose_name_plural = "Kurir"
-
-
 class Faktur(models.Model):
     STATUS_CHOICES = [
         ('diproses', 'Diproses'),
         ('selesai', 'Selesai'),
         ('dibatalkan', 'Dibatalkan'),
     ]
+
     id_faktur = models.AutoField(primary_key=True)
-    total_faktur = models.DecimalField(max_digits=15, decimal_places=2)
+    total_faktur = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='diproses')
-    berat = models.DecimalField(max_digits=10, decimal_places=2)
-    koli = models.IntegerField()
-    foto_pengiriman = models.ImageField(upload_to='faktur_images/')
-    kurir = models.ForeignKey(Kurir, on_delete=models.CASCADE)
+    berat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    koli = models.IntegerField(default=0)
+    foto_pengiriman = models.ImageField(upload_to='faktur_images/', blank=True, null=True)
+    kurir = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='faktur_kurir')
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='faktur')
     pembeli = models.ForeignKey(Pembeli, on_delete=models.CASCADE, related_name='faktur')
 
     def __str__(self):
         return f"Faktur #{self.id_faktur} - {self.pembeli.nama}"
+
+    def update_total(self):
+        """Hitung ulang total faktur berdasarkan detailnya."""
+        total = Decimal('0.00')
+        for detail in self.detail.all():
+            total += detail.barang.harga_barang * detail.jumlah_barang
+        self.total_faktur = total
+        self.save(update_fields=['total_faktur'])
 
     class Meta:
         verbose_name = "Faktur"
@@ -128,6 +126,15 @@ class DetailFaktur(models.Model):
 
     def __str__(self):
         return f"{self.barang.nama_barang} x {self.jumlah_barang}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.faktur.update_total()
+
+    def delete(self, *args, **kwargs):
+        faktur = self.faktur
+        super().delete(*args, **kwargs)
+        faktur.update_total()
 
     class Meta:
         verbose_name = "Detail Faktur"
