@@ -1,0 +1,76 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Dashboard Pembeli - Trio Prima Logistik{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5>Selamat datang, <strong>{{ pembeli.nama }}</strong>!</h5>
+        <p class="text-muted mb-0">
+          Anda dapat mengelola faktur dan mengirim keluhan melalui dashboard ini.
+        </p>
+      </div>
+    </div>
+    
+    <div class="row">
+
+      <div class="col-md mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fa-solid fa-comment-dots me-2 text-success"></i>Keluhan
+            </h5>
+            <p class="text-muted">
+              Kirim keluhan atau lihat riwayat keluhan Anda.
+            </p>
+            <a href="{% url 'pembeli_keluhan_buat' %}" class="btn btn-custom">Kirim Keluhan</a>
+            <a href="{% url 'pembeli_keluhan_riwayat' %}" class="btn btn-outline-primary ms-2">Riwayat</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {% if faktur_list %}
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fa-solid fa-list me-2"></i>Faktur Terbaru</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID Faktur</th>
+                <th>Vendor</th>
+                <th>Status</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for faktur in faktur_list %}
+              <tr>
+                <td>{{ faktur.id_faktur }}</td>
+                <td>{{ faktur.vendor.nama }}</td>
+                <td>
+                  {% if faktur.status == 'diproses' %}
+                    <span class="badge bg-warning text-dark">Diproses</span>
+                  {% elif faktur.status == 'selesai' %}
+                    <span class="badge bg-success">Selesai</span>
+                  {% else %}
+                    <span class="badge bg-danger">Dibatalkan</span>
+                  {% endif %}
+                </td>
+                <td>Rp {{ faktur.total_faktur|floatformat:0 }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

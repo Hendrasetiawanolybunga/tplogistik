@@ -63,6 +63,7 @@ class Vendor(models.Model):
     id_vendor = models.AutoField(primary_key=True)
     nama = models.CharField(max_length=100)
     email = models.EmailField()
+    password = models.CharField(max_length=100, blank=True, null=True)
     alamat = models.TextField()
     no_hp = models.CharField(max_length=20)
 

@@ -1,0 +1,36 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Dashboard Vendor - Trio Prima Logistik{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5>Selamat datang, <strong>{{ vendor.nama }}</strong>!</h5>
+        <p class="text-muted mb-0">
+          Anda dapat mengelola laporan keluhan melalui dashboard ini.
+        </p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fa-solid fa-exclamation-circle me-2 text-warning"></i>Laporan Keluhan
+            </h5>
+            <p class="text-muted">
+              Lihat semua keluhan yang terkait dengan faktur Anda.
+            </p>
+            <a href="{% url 'vendor_keluhan_laporan' %}" class="btn btn-custom">Lihat Laporan</a>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+{% endblock %}

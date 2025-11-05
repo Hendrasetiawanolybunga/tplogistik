@@ -1,6 +1,5 @@
-
 from django import forms
-from .models import Pembeli, Keluhan, Faktur
+from . import models
 
 class LoginPembeliForm(forms.Form):
     email = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={
@@ -14,15 +13,32 @@ class LoginPembeliForm(forms.Form):
 
 
 class KeluhanForm(forms.ModelForm):
+    # Definisikan Faktur secara manual sebagai ModelChoiceField
+    faktur = forms.ModelChoiceField(
+        queryset=models.Faktur.objects.none(),  # Defaultnya kosong
+        required=False, 
+        label="Faktur Terkait",
+        empty_label="-- Pilih Faktur (Opsional) --",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     class Meta:
-        model = Keluhan
-        fields = ['faktur', 'isi_keluhan', 'foto']
+        model = models.Keluhan
+        # Hapus 'faktur' dari daftar fields, field lainnya tetap
+        fields = ['isi_keluhan', 'foto']
         widgets = {
-            'faktur': forms.Select(attrs={'class': 'form-select'}),
             'isi_keluhan': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'foto': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        # Ambil queryset faktur dari kwargs (dikirim oleh view)
+        faktur_queryset = kwargs.pop('faktur_queryset', None) 
+        super().__init__(*args, **kwargs)
+
+        # Jika queryset faktur disediakan, set queryset untuk field faktur
+        if faktur_queryset is not None:
+            self.fields['faktur'].queryset = faktur_queryset
 
 
 class PembeliRegisterForm(forms.ModelForm):
@@ -36,7 +52,7 @@ class PembeliRegisterForm(forms.ModelForm):
     }))
 
     class Meta:
-        model = Pembeli
+        model = models.Pembeli
         fields = ['nama', 'email', 'no_hp', 'alamat', 'kelurahan', 'password']
         widgets = {
             'nama': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nama lengkap'}),

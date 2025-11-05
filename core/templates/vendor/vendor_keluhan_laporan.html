@@ -1,0 +1,87 @@
+{% extends 'base_public.html' %}
+
+{% block title %}Laporan Keluhan - Trio Prima Logistik{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2><i class="fa-solid fa-exclamation-circle me-2"></i>Laporan Keluhan</h2>
+      
+    </div>
+    
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5>Selamat datang, <strong>{{ vendor.nama }}</strong>!</h5>
+        <p class="text-muted mb-0">
+          Berikut adalah laporan keluhan yang terkait dengan faktur Anda.
+        </p>
+      </div>
+    </div>
+    
+    {% if keluhan_list %}
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="fa-solid fa-list me-2"></i>Daftar Keluhan</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID Keluhan</th>
+                <th>Pembeli</th>
+                <th>Faktur</th>
+                <th>Isi Keluhan</th>
+                <th>Tanggal</th>
+                <th>Foto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for keluhan in keluhan_list %}
+              <tr>
+                <td>{{ keluhan.id_keluhan }}</td>
+                <td>{{ keluhan.pembeli.nama }}</td>
+                <td>{{ keluhan.faktur }}</td>
+                <td>{{ keluhan.isi_keluhan|truncatewords:10 }}</td>
+                <td>{{ keluhan.tanggal|date:"d M Y H:i" }}</td>
+                <td>
+                  {% if keluhan.foto %}
+                    <a href="{{ keluhan.foto.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                      <i class="fa-solid fa-image me-1"></i>Lihat
+                    </a>
+                  {% else %}
+                    <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Export Button -->
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-success" onclick="exportToExcel()">
+            <i class="fa-solid fa-file-excel me-1"></i>Ekspor ke Excel
+          </button>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <i class="fa-solid fa-inbox fa-3x text-muted mb-3"></i>
+      <h5>Tidak ada keluhan</h5>
+      <p class="text-muted">Belum ada keluhan yang terkait dengan faktur Anda.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function exportToExcel() {
+  // Simple export functionality - in a real application, this would be more complex
+  alert("Fitur ekspor ke Excel akan diimplementasikan dalam versi berikutnya.");
+}
+</script>
+{% endblock %}
