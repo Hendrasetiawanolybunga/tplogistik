@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from . import models
 from .forms import LoginPembeliForm, KeluhanForm, PembeliRegisterForm
 from functools import wraps
-
+from .models import Pembeli, Vendor
 # Helper decorators
 def pembeli_required(view_func):
     @wraps(view_func)
@@ -23,8 +23,51 @@ def vendor_required(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
+# def index(request):
+#     return render(request, 'user_beranda.html')
+
+
 def index(request):
-    return render(request, 'index.html')
+    """
+    Menampilkan halaman beranda (user_beranda.html) dengan personalisasi nama 
+    berdasarkan user yang sedang login (Pembeli atau Vendor).
+    """
+    nama_user = None
+    user_type = None
+    
+    # 1. Cek apakah Pembeli/Pelanggan sedang login
+    pembeli_id = request.session.get('pembeli_id')
+    if pembeli_id:
+        try:
+            # Ambil objek Pelanggan berdasarkan ID sesi
+            pelanggan = Pembeli.objects.get(pk=pembeli_id)
+            nama_user = pelanggan.nama  # Asumsi field nama ada di model Pelanggan
+            user_type = 'Pembeli'
+        except Pembeli.DoesNotExist:
+            # Jika ID ada di sesi tapi objek tidak ditemukan (data error/hilang)
+            pass 
+
+    # 2. Cek apakah Vendor sedang login
+    vendor_id = request.session.get('vendor_id')
+    if vendor_id and not nama_user: # Prioritas Pembeli, jika belum dapat nama, cek Vendor
+        try:
+            # Ambil objek Vendor berdasarkan ID sesi
+            vendor = Vendor.objects.get(pk=vendor_id)
+            nama_user = vendor.nama # Asumsi field nama_vendor ada di model Vendor
+            user_type = 'Vendor'
+        except Vendor.DoesNotExist:
+            pass
+
+    # 3. Definisikan konteks untuk dikirim ke template
+    context = {
+        # Jika nama_user terisi, kirim nama tersebut. Jika tidak (belum login), 
+        # nama akan tetap None, dan template akan menangani logika if/else nya.
+        'nama': nama_user,
+        'user_type': user_type, # Dipakai untuk menampilkan tombol 'Pesan Air Galon'
+    }
+    
+    # Render template dengan konteks
+    return render(request, 'user_beranda.html', context)
 
 # Pembeli Views
 def pembeli_register(request):
@@ -56,7 +99,7 @@ def pembeli_login(request):
                     request.session['pembeli_id'] = pembeli.id_pembeli
                     request.session['pembeli_nama'] = pembeli.nama
                     messages.success(request, f"Selamat datang, {pembeli.nama}!")
-                    return redirect('pembeli_dashboard')
+                    return redirect('beranda')
                 else:
                     messages.error(request, "Email atau password salah!")
             except models.Pembeli.DoesNotExist:
@@ -179,7 +222,7 @@ def vendor_login(request):
             request.session['vendor_id'] = vendor.id_vendor
             request.session['vendor_nama'] = vendor.nama
             messages.success(request, f"Selamat datang, {vendor.nama}!")
-            return redirect('vendor_dashboard')
+            return redirect('beranda')
         else:
             messages.error(request, "Email atau password salah!")
     return render(request, 'vendor/vendor_login.html')

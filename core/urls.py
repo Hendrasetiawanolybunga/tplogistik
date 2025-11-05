@@ -3,7 +3,7 @@ from . import views_kurir
 from . import views
 
 urlpatterns = [
-    path("", views.pembeli_login, name="pembeli_login"),
+    path("", views.index, name="beranda"),
     path("kurir/login/", views_kurir.kurir_login, name="kurir_login"),
     path("kurir/dashboard/", views_kurir.kurir_dashboard, name="kurir_dashboard"),
     path("kurir/faktur/<int:faktur_id>/", views_kurir.kurir_faktur_detail, name="kurir_faktur_detail"),

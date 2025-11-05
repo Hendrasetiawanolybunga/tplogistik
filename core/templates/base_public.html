@@ -126,7 +126,7 @@
   <!-- 🌐 Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
-     <a class="navbar-brand" href="{% if request.session.pembeli_id %}{% url 'pembeli_dashboard' %}{% elif request.session.vendor_id %}{% url 'vendor_dashboard' %}{% else %}{% url 'pembeli_login' %}{% endif %}">
+     <a class="navbar-brand" href="{% url 'beranda' %}">
         <i class="fa-solid fa-truck-fast me-2"></i> Trio Prima Logistik
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -138,7 +138,7 @@
           {% if request.session.pembeli_id %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'pembeli_dashboard' %}">
-                <i class="fa-solid fa-table-columns me-1"></i> Dashboard Pembeli
+                <i class="fa-solid fa-table-columns me-1"></i> Keluhan
               </a>
             </li>
             <li class="nav-item">
@@ -149,7 +149,7 @@
           {% elif request.session.vendor_id %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'vendor_dashboard' %}">
-                <i class="fa-solid fa-table-columns me-1"></i> Dashboard Vendor
+                <i class="fa-solid fa-table-columns me-1"></i> Keluhan
               </a>
             </li>
             <li class="nav-item">
