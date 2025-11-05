@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Kurir{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <h4 class="card-title text-primary"><i class="fa-solid fa-truck-fast"></i> Selamat datang, {{ kurir_nama }}!</h4>
+            <p class="card-text text-muted mb-0">Kelola dan update status faktur distribusi Anda di sini.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fa-solid fa-list-check"></i> Daftar Faktur Anda</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive-sm">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 10%;">ID</th>
+                            <th>Pembeli</th>
+                            <th>Vendor</th>
+                            <th class="text-end">Total</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for faktur in faktur_list %}
+                        <tr>
+                            <td class="text-center">#{{ faktur.id_faktur }}</td>
+                            <td>{{ faktur.pembeli.nama }}</td>
+                            <td>{{ faktur.vendor.nama }}</td>
+                            <td class="text-end fw-bold">Rp {{ faktur.total_faktur|floatformat:0 }}</td>
+                            <td>
+                                {% if faktur.status == 'Selesai' %}
+                                    <span class="badge bg-success"><i class="fa-solid fa-check"></i> Selesai</span>
+                                {% elif faktur.status == 'Dalam Proses' %}
+                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-route"></i> Proses</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ faktur.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'kurir_faktur_detail' faktur.id_faktur %}" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-eye"></i> Detail
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="fa-solid fa-box-open me-2"></i> Belum ada faktur yang ditugaskan untuk Anda.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

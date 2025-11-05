@@ -45,8 +45,8 @@ ROOT_URLCONF = 'TPL.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'],  # opsional kalau kamu punya template global
+        'APP_DIRS': True,  # penting! agar Django cari templates di setiap app
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',

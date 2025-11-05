@@ -6,7 +6,6 @@ from core.admin import admin_site
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('kurir/', admin_site.urls),
     path('', include('core.urls')),
 ]
 

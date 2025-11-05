@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Detail Faktur #{{ faktur.id_faktur }}{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <a href="{% url 'kurir_dashboard' %}" class="btn btn-outline-secondary mb-4 btn-sm">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
+    </a>
+
+    {% if messages %}
+    <div class="alert alert-success shadow-sm" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i>
+        {% for msg in messages %}
+            {{ msg }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <h4 class="card-title text-primary">Detail Faktur #{{ faktur.id_faktur }}</h4>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <p class="mb-1 text-muted">Pembeli:</p>
+                    <p class="fw-bold mb-0">{{ faktur.pembeli.nama }}</p>
+                </div>
+                <div class="col-6">
+                    <p class="mb-1 text-muted">Vendor:</p>
+                    <p class="fw-bold mb-0">{{ faktur.vendor.nama }}</p>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p class="mb-1 text-muted">Status Saat Ini:</p>
+                <span class="badge rounded-pill 
+                    {% if faktur.status == 'Selesai' %}bg-success
+                    {% elif faktur.status == 'Dalam Proses' %}bg-warning text-dark
+                    {% else %}bg-info
+                    {% endif %} 
+                    py-2 px-3 fw-bold">
+                    <i class="fa-solid fa-info-circle me-1"></i> {{ faktur.status }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fa-solid fa-edit"></i> Perbarui Status Pengiriman</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'kurir_update_status' faktur.id_faktur %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="status-select" class="form-label fw-bold">Pilih Status Baru</label>
+                    <select name="status" id="status-select" class="form-select" required>
+                        {% for key, value in faktur.STATUS_CHOICES %}
+                            <option value="{{ key }}" {% if faktur.status == key %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="foto-upload" class="form-label fw-bold">Upload Foto Pengiriman (Opsional)</label>
+                    <input type="file" name="foto_pengiriman" id="foto-upload" class="form-control" accept="image/*">
+                    
+                    {% if faktur.foto_pengiriman %}
+                        <small class="form-text text-muted d-block mt-2">Foto saat ini:</small>
+                        <div class="mt-2">
+                            <img src="{{ faktur.foto_pengiriman.url }}" alt="Foto Pengiriman" class="img-fluid rounded shadow-sm" style="max-width: 200px; height: auto;">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fa-solid fa-save"></i> Simpan Perubahan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="fa-solid fa-boxes-stacked"></i> Daftar Barang</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive-sm">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Barang</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Harga Satuan</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in detail_list %}
+                        <tr>
+                            <td>{{ d.barang.nama_barang }}</td>
+                            <td class="text-center">{{ d.jumlah_barang }}</td>
+                            <td class="text-end">Rp {{ d.barang.harga_barang|floatformat:0 }}</td>
+                            
+                          <td>Rp {{ d.barang.harga_barang|floatformat:0|add:d.jumlah_barang }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-end bg-light">
+                <p class="mb-0 fw-bold">Total Faktur: **Rp {{ faktur.total_faktur|floatformat:0 }}**</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,12 @@
 from django.db import models
 from django.conf import settings
 from decimal import Decimal
+from django.utils import timezone
 
 
+# =============================
+# MODEL KECAMATAN
+# =============================
 class Kecamatan(models.Model):
     id_kecamatan = models.AutoField(primary_key=True)
     nama_kecamatan = models.CharField(max_length=100)
@@ -15,6 +19,9 @@ class Kecamatan(models.Model):
         verbose_name_plural = "Kecamatan"
 
 
+# =============================
+# MODEL KELURAHAN
+# =============================
 class Kelurahan(models.Model):
     id_kelurahan = models.AutoField(primary_key=True)
     nama_kelurahan = models.CharField(max_length=100)
@@ -29,12 +36,17 @@ class Kelurahan(models.Model):
         verbose_name_plural = "Kelurahan"
 
 
+# =============================
+# MODEL PEMBELI
+# =============================
 class Pembeli(models.Model):
     id_pembeli = models.AutoField(primary_key=True)
     nama = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)
     alamat = models.TextField()
     no_hp = models.CharField(max_length=20)
-    kelurahan = models.ForeignKey(Kelurahan, on_delete=models.CASCADE)
+    kelurahan = models.ForeignKey('Kelurahan', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nama
@@ -44,6 +56,9 @@ class Pembeli(models.Model):
         verbose_name_plural = "Pembeli"
 
 
+# =============================
+# MODEL VENDOR
+# =============================
 class Vendor(models.Model):
     id_vendor = models.AutoField(primary_key=True)
     nama = models.CharField(max_length=100)
@@ -59,6 +74,9 @@ class Vendor(models.Model):
         verbose_name_plural = "Vendor"
 
 
+# =============================
+# MODEL KATEGORI
+# =============================
 class Kategori(models.Model):
     id_kategori = models.AutoField(primary_key=True)
     nama = models.CharField(max_length=100)
@@ -71,6 +89,9 @@ class Kategori(models.Model):
         verbose_name_plural = "Kategori"
 
 
+# =============================
+# MODEL BARANG
+# =============================
 class Barang(models.Model):
     id_barang = models.AutoField(primary_key=True)
     nama_barang = models.CharField(max_length=100)
@@ -85,6 +106,30 @@ class Barang(models.Model):
         verbose_name_plural = "Barang"
 
 
+# =============================
+# MODEL KURIR (Baru)
+# =============================
+class Kurir(models.Model):
+    id_kurir = models.AutoField(primary_key=True)
+    nama = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=10)
+    no_hp = models.CharField(max_length=20, blank=True, null=True)
+    alamat = models.TextField(blank=True, null=True)
+    aktif = models.BooleanField(default=True)
+    tanggal_bergabung = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return self.nama
+
+    class Meta:
+        verbose_name = "Kurir"
+        verbose_name_plural = "Kurir"
+
+
+# =============================
+# MODEL FAKTUR
+# =============================
 class Faktur(models.Model):
     STATUS_CHOICES = [
         ('diproses', 'Diproses'),
@@ -98,7 +143,10 @@ class Faktur(models.Model):
     berat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     koli = models.IntegerField(default=0)
     foto_pengiriman = models.ImageField(upload_to='faktur_images/', blank=True, null=True)
-    kurir = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='faktur_kurir')
+    
+    # 🔹 Ganti field kurir agar ambil dari model Kurir baru
+    kurir = models.ForeignKey(Kurir, on_delete=models.SET_NULL, null=True, blank=True, related_name='faktur')
+
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='faktur')
     pembeli = models.ForeignKey(Pembeli, on_delete=models.CASCADE, related_name='faktur')
 
@@ -118,6 +166,9 @@ class Faktur(models.Model):
         verbose_name_plural = "Faktur"
 
 
+# =============================
+# MODEL DETAIL FAKTUR
+# =============================
 class DetailFaktur(models.Model):
     id_detail = models.AutoField(primary_key=True)
     faktur = models.ForeignKey(Faktur, on_delete=models.CASCADE, related_name='detail')
@@ -141,14 +192,19 @@ class DetailFaktur(models.Model):
         verbose_name_plural = "Detail Faktur"
 
 
+# =============================
+# MODEL KELUHAN
+# =============================
 class Keluhan(models.Model):
     id_keluhan = models.AutoField(primary_key=True)
-    isi_keluhan = models.TextField()
-    foto_keluhan = models.ImageField(upload_to='keluhan_images/', blank=True, null=True)
     pembeli = models.ForeignKey(Pembeli, on_delete=models.CASCADE)
+    faktur = models.CharField(max_length=100, blank=True, null=True)
+    isi_keluhan = models.TextField()
+    foto = models.ImageField(upload_to='keluhan_images/', blank=True, null=True)
+    tanggal = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Keluhan #{self.id_keluhan} - {self.pembeli.nama}"
+        return f"Keluhan {self.pembeli.nama} - {self.faktur if self.faktur else 'Tanpa Faktur'}"
 
     class Meta:
         verbose_name = "Keluhan"
