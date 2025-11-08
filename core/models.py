@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from decimal import Decimal
 from django.utils import timezone
-
+from django.contrib.auth.hashers import make_password
 
 # =============================
 # MODEL KECAMATAN
@@ -48,6 +48,16 @@ class Pembeli(models.Model):
     no_hp = models.CharField(max_length=20)
     kelurahan = models.ForeignKey('Kelurahan', on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        # Cek apakah password adalah teks biasa (yaitu, belum di-hash)
+        # Cara paling sederhana: Cek apakah nilainya terlihat seperti hash
+        # Jika password TIDAK diawali dengan format hash (misalnya 'pbkdf2_sha256$'), 
+        # maka hash password baru.
+        if not self.password.startswith('pbkdf2_sha256$'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+   
+
     def __str__(self):
         return self.nama
 
@@ -66,6 +76,13 @@ class Vendor(models.Model):
     password = models.CharField(max_length=100, blank=True, null=True)
     alamat = models.TextField()
     no_hp = models.CharField(max_length=20)
+
+    def save(self, *args, **kwargs):
+        # Cek apakah password adalah teks biasa
+        if not self.password.startswith('pbkdf2_sha256$'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+   
 
     def __str__(self):
         return self.nama
